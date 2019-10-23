@@ -2,9 +2,39 @@ import React, { Component } from 'react';
 import { View, Platform } from 'react-native';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Home from './HomeComponent';
+import About from './AboutComponent';
 import Menu from './MenuComponent';
+import Contact from './ContactComponent'
 import DishDetail from './DishdetailComponent';
 import { DISHES } from '../shared/dishes';
+
+const HomeNavigator = createStackNavigator({
+    Home: { screen: Home }
+}, {
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: "#512DA8"
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            color: "#fff"            
+        }
+    }
+});
+
+const AboutNavigator = createStackNavigator({
+    About: { screen: About }
+}, {
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: "#512DA8"
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            color: "#fff"            
+        }
+    }
+});
 
 const MenuNavigator = createStackNavigator({
     Menu: { screen: Menu },
@@ -22,8 +52,8 @@ const MenuNavigator = createStackNavigator({
     }
 });
 
-const HomeNavigator = createStackNavigator({
-    Home: { screen: Home }
+const ContactNavigator = createStackNavigator({
+    Contact: { screen: Contact }
 }, {
     navigationOptions: {
         headerStyle: {
@@ -44,11 +74,25 @@ const MainNavigator = createDrawerNavigator({
             drawerLabel: 'Home'
         }
     },
+    About: {
+        screen: AboutNavigator,
+        navigationOptions: {
+            title: 'About Us',
+            drawerLabel: 'About Us'
+        }
+    },
     Menu: {
         screen: MenuNavigator,
         navigationOptions: {
             title: 'Menu',
             drawerLabel: 'Menu'
+        }
+    },
+    Contact: {
+        screen: ContactNavigator,
+        navigationOptions: {
+            title: 'Contact Us',
+            drawerLabel: 'Contact Us'
         }
     }
 }, {drawerBackgroundColor: '#D1C4E9'})
