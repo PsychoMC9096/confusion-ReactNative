@@ -33,6 +33,49 @@ export const addComments = (comments) => ({
     payload: comments
 })
 
+export const postComment = (dishId, rating, author, comment)  => (dispatch) => {
+    const newComment = {
+        dishId: dishId,
+        rating: rating,
+        author: author,
+        comment: comment
+    };
+    newComment.date = new Date().toISOString();
+    
+    return fetch(baseUrl + 'comments', {
+        method: "POST",
+        body: JSON.stringify(newComment),
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "same-origin"
+    })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                throw error;
+            })
+        .then(response => response.json())
+        .then(response => setTimeout( () => {dispatch(addComment(response))}, 2000))
+        .catch(error => {
+            console.log('post comments', error.message);
+            alert('Your comment could not be posted\nError: ' + error.message);
+        })
+};
+
+
+export const addComment = (comment) => ({
+    type: ActionTypes.ADD_COMMENT,
+    payload: comment
+});
+
 //DISHES ACTIONS
 export const fetchDishes = () => (dispatch) => {
     dispatch(dishesLoading())
@@ -149,10 +192,9 @@ export const addLeaders = (leaders) => ({
 
 //FAVORITES ACTIONS
 export const postFavorite = (dishId)  => (dispatch) => {
-    dispatch(addFavorite(dishId));
-    // setTimeout(() => {
-
-    // }, 2000);
+    setTimeout(() => {
+        dispatch(addFavorite(dishId));
+    }, 2000);
 };
 
 export const addFavorite = (dishId) => ({
