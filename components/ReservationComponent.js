@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, Picker, Switch, Button, Modal, Alert } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Alert } from 'react-native';
+import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
-import DatePicker from 'react-native-datepicker'
 import * as Permissions from 'expo-permissions';
+import * as Calendar from 'expo-calendar';
 import { Notifications } from 'expo';
 
 class Reservation extends Component {
@@ -38,6 +39,7 @@ class Reservation extends Component {
                     text: 'OK',
                     onPress: () => {
                         this.presentLocalNotification(this.state.date); 
+                        this.addReservationToCalendar(this.state.date);
                         this.resetForm();
                     }
                 }
@@ -53,6 +55,29 @@ class Reservation extends Component {
             date: '',
             showModal: false
         });
+    }
+
+    async obtainCalendarPermission()  {
+        let permission = await Permissions.getAsync(Permissions.CALENDAR);
+        if (permission.status !== 'granted') {
+            permission = await Permissions.askAsync(Permissions.CALENDAR);
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission not granted for calendar');
+            }
+        }
+        return permission;
+    }
+
+    async addReservationToCalendar(date) {
+        await this.obtainCalendarPermission();
+        
+        await Calendar.createEventAsync(Calendar.DEFAULT, {
+            title: "Con Fusion Table Reservation",
+            startDate: new Date(Date.parse(date)),
+            endDate: new Date(Date.parse(date) + 7200000),
+            location: '121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong',
+            timeZone: 'Asia/Hong_Kong'
+        })
     }
 
     async obtainNotificationPermission() {
